@@ -1,7 +1,7 @@
 package com.example.project;
 
 class BTree2{
-    BTreeNode root;
+    BNodeGeneric<T> root;
     int MinDeg;
 
     // Constructor
