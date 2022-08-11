@@ -1,6 +1,6 @@
 package com.example.project;
 
-class GenericBTree{
+class GenericBTree<T extends Comparable<T>> {
     BTreeNode<T> root;
     int MinDeg;
 
