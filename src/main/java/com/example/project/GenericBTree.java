@@ -5,7 +5,7 @@ class GenericBTree<T extends Comparable<T>> {
     int MinDeg;
 
     // Constructor
-    public BTree2(int deg){
+    public GenericBTree(int deg){
         this.root = null;
         this.MinDeg = deg;
     }
@@ -22,26 +22,24 @@ class GenericBTree<T extends Comparable<T>> {
     }
 
     public void insert(T key){
-
         if (root == null){
-
-            root = new BTreeNode(MinDeg,true);
-            root.keys[0] = key;
+            root = new BTreeNode<T>(MinDeg, true);
+            root.keys.set(0, key);
             root.num = 1;
         }
         else {
             // When the root node is full, the tree will grow high
             if (root.num == 2*MinDeg-1){
-                BTreeNode<T> s = new BTreeNode<T>(MinDeg,false);
+                BTreeNode<T> s = new BTreeNode<T>(MinDeg, false);
                 // The old root node becomes a child of the new root node
-                s.children[0] = root;
+                s.children.set(0, root);
                 // Separate the old root node and give a key to the new node
                 s.splitChild(0,root);
                 // The new root node has 2 child nodes. Move the old one over there
                 int i = 0;
-                if (s.keys[0].compareTo(key) < 0)
+                if (s.keys.get(0).compareTo(key) < 0)
                     i++;
-                s.children[i].insertNotFull(key);
+                s.children.get(i).insertNotFull(key);
 
                 root = s;
             }
@@ -64,13 +62,14 @@ class GenericBTree<T extends Comparable<T>> {
             if (root.isLeaf)
                 root = null;
             else
-                root = root.children[0];
+                root = root.children.get(0);
         }
     }
 
     public static void main(String[] args) {
 
         GenericBTree<Integer> t = new GenericBTree<Integer>(2); // A B-Tree with minium degree 2
+
         t.insert(1);
         t.insert(3);
         t.insert(7);
