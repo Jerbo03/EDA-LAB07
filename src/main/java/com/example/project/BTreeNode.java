@@ -1,6 +1,6 @@
 package com.example.project;
 
-public class BTreeNode<T> {
+public class BTreeNode<T extends Comparable<T>> {
 
     Vector<T> keys; // keys of nodes
     int MinDeg; // Minimum degree of B-tree node
