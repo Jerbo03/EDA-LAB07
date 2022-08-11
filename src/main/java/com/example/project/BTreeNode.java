@@ -1,20 +1,19 @@
 package com.example.project;
 
-public class BTreeNode{
+public class BTreeNode<T> {
 
-    int[] keys; // keys of nodes
+    Vector<T> keys; // keys of nodes
     int MinDeg; // Minimum degree of B-tree node
-    BTreeNode[] children; // Child node
+    Vector<BTreeNode<T>> children; // Child node
     int num; // Number of keys of node
     boolean isLeaf; // True when leaf node
 
     // Constructor
     public BTreeNode(int deg,boolean isLeaf){
-
         this.MinDeg = deg;
         this.isLeaf = isLeaf;
-        this.keys = new int[2*this.MinDeg-1]; // Node has 2*MinDeg-1 keys at most
-        this.children = new BTreeNode[2*this.MinDeg];
+        this.keys = new T[2*this.MinDeg-1]; // Node has 2*MinDeg-1 keys at most
+        this.children = new BTreeNode<T>[2*this.MinDeg];
         this.num = 0;
     }
 
