@@ -1,7 +1,7 @@
 package com.example.project;
 
 class BTree2{
-    BNodeGeneric<T> root;
+    BTreeNode<T> root;
     int MinDeg;
 
     // Constructor
@@ -17,11 +17,11 @@ class BTree2{
     }
 
     // Function to find key
-    public BTreeNode search(int key){
+    public BTreeNode<T> search(T key){
         return root == null ? null : root.search(key);
     }
 
-    public void insert(int key){
+    public void insert(T key){
 
         if (root == null){
 
@@ -32,14 +32,14 @@ class BTree2{
         else {
             // When the root node is full, the tree will grow high
             if (root.num == 2*MinDeg-1){
-                BTreeNode s = new BTreeNode(MinDeg,false);
+                BTreeNode<T> s = new BTreeNode<T>(MinDeg,false);
                 // The old root node becomes a child of the new root node
                 s.children[0] = root;
                 // Separate the old root node and give a key to the new node
                 s.splitChild(0,root);
                 // The new root node has 2 child nodes. Move the old one over there
                 int i = 0;
-                if (s.keys[0] < key)
+                if (s.keys[0].compareTo(key) < 0)
                     i++;
                 s.children[i].insertNotFull(key);
 
@@ -50,7 +50,7 @@ class BTree2{
         }
     }
 
-    public void remove(int key){
+    public void remove(T key){
         if (root == null){
             System.out.println("The tree is empty");
             return;
@@ -70,7 +70,7 @@ class BTree2{
 
     public static void main(String[] args) {
 
-        BTree2 t = new BTree2(2); // A B-Tree with minium degree 2
+        BTree2<Integer> t = new BTree2<Integer>(2); // A B-Tree with minium degree 2
         t.insert(1);
         t.insert(3);
         t.insert(7);
