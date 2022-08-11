@@ -1,6 +1,6 @@
 package com.example.project;
 
-class BTree2{
+class GenericBTree{
     BTreeNode<T> root;
     int MinDeg;
 
@@ -70,7 +70,7 @@ class BTree2{
 
     public static void main(String[] args) {
 
-        BTree2<Integer> t = new BTree2<Integer>(2); // A B-Tree with minium degree 2
+        GenericBTree<Integer> t = new GenericBTree<Integer>(2); // A B-Tree with minium degree 2
         t.insert(1);
         t.insert(3);
         t.insert(7);
