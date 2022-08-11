@@ -18,21 +18,21 @@ public class BTreeNode<T> {
     }
 
     // Find the first location index equal to or greater than key
-    public int findKey(int key){
+    public int findKey(T key){
 
         int idx = 0;
         // The conditions for exiting the loop are: 1.idx == num, i.e. scan all of them once
         // 2. IDX < num, i.e. key found or greater than key
-        while (idx < num && keys[idx] < key)
+        while (idx < num && keys[idx].compareTo(key) < 0)
             ++idx;
         return idx;
     }
 
 
-    public void remove(int key){
+    public void remove(T key){
 
         int idx = findKey(key);
-        if (idx < num && keys[idx] == key){ // Find key
+        if (idx < num && keys[idx].compareTo(key)==0){ // Find key
             if (isLeaf) // key in leaf node
                 removeFromLeaf(idx);
             else // key is not in the leaf node
@@ -73,7 +73,7 @@ public class BTreeNode<T> {
 
     public void removeFromNonLeaf(int idx){
 
-        int key = keys[idx];
+        T key = keys[idx];
 
         // If the subtree before key (children[idx]) has at least t keys
         // Then find the precursor 'pred' of key in the subtree with children[idx] as the root
@@ -101,19 +101,19 @@ public class BTreeNode<T> {
         }
     }
 
-    public int getPred(int idx){ // The predecessor node is the node that always finds the rightmost node from the left subtree
+    public T getPred(int idx){ // The predecessor node is the node that always finds the rightmost node from the left subtree
 
         // Move to the rightmost node until you reach the leaf node
-        BTreeNode cur = children[idx];
+        BTreeNode<T> cur = children[idx];
         while (!cur.isLeaf)
             cur = cur.children[cur.num];
         return cur.keys[cur.num-1];
     }
 
-    public int getSucc(int idx){ // Subsequent nodes are found from the right subtree all the way to the left
+    public T getSucc(int idx){ // Subsequent nodes are found from the right subtree all the way to the left
 
         // Continue to move the leftmost node from children[idx+1] until it reaches the leaf node
-        BTreeNode cur = children[idx+1];
+        BTreeNode<T> cur = children[idx+1];
         while (!cur.isLeaf)
             cur = cur.children[0];
         return cur.keys[0];
@@ -142,8 +142,8 @@ public class BTreeNode<T> {
     // Borrow a key from children[idx-1] and insert it into children[idx]
     public void borrowFromPrev(int idx){
 
-        BTreeNode child = children[idx];
-        BTreeNode sibling = children[idx-1];
+        BTreeNode<T> child = children[idx];
+        BTreeNode<T> sibling = children[idx-1];
 
         // The last key from children[idx-1] overflows to the parent node
         // The key[idx-1] underflow from the parent node is inserted as the first key in children[idx]
@@ -170,8 +170,8 @@ public class BTreeNode<T> {
     // Symmetric with borowfromprev
     public void borrowFromNext(int idx){
 
-        BTreeNode child = children[idx];
-        BTreeNode sibling = children[idx+1];
+        BTreeNode<T> child = children[idx];
+        BTreeNode<T> sibling = children[idx+1];
 
         child.keys[child.num] = keys[idx];
 
@@ -194,8 +194,8 @@ public class BTreeNode<T> {
     // Merge childre[idx+1] into childre[idx]
     public void merge(int idx){
 
-        BTreeNode child = children[idx];
-        BTreeNode sibling = children[idx+1];
+        BTreeNode<T> child = children[idx];
+        BTreeNode<T> sibling = children[idx+1];
 
         // Insert the last key of the current node into the MinDeg-1 position of the child node
         child.keys[MinDeg-1] = keys[idx];
@@ -222,13 +222,13 @@ public class BTreeNode<T> {
     }
 
 
-    public void insertNotFull(int key){
+    public void insertNotFull(T key){
 
         int i = num -1; // Initialize i as the rightmost index
 
         if (isLeaf){ // When it is a leaf node
             // Find the location where the new key should be inserted
-            while (i >= 0 && keys[i] > key){
+            while (i >= 0 && keys[i].compareTo(key) > 0){
                 keys[i+1] = keys[i]; // keys backward shift
                 i--;
             }
@@ -237,7 +237,7 @@ public class BTreeNode<T> {
         }
         else{
             // Find the child node location that should be inserted
-            while (i >= 0 && keys[i] > key)
+            while (i >= 0 && keys[i].compareTo(key) > 0)
                 i--;
             if (children[i+1].num == 2*MinDeg - 1){ // When the child node is full
                 splitChild(i+1,children[i+1]);
@@ -250,10 +250,10 @@ public class BTreeNode<T> {
     }
 
 
-    public void splitChild(int i ,BTreeNode y){
+    public void splitChild(int i ,BTreeNode<T> y){
 
         // First, create a node to hold the keys of MinDeg-1 of y
-        BTreeNode z = new BTreeNode(y.MinDeg,y.isLeaf);
+        BTreeNode<T> z = new BTreeNode<T>(y.MinDeg,y.isLeaf);
         z.num = MinDeg - 1;
 
         // Pass the properties of y to z
@@ -293,9 +293,9 @@ public class BTreeNode<T> {
     }
 
 
-    public BTreeNode search(int key){
+    public BTreeNode<T> search(T key){
         int i = 0;
-        while (i < num && key > keys[i])
+        while (i < num && key.compareTo(keys[i]) > 0)
             i++;
 
         if (keys[i] == key)
